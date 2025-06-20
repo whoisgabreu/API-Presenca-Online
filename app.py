@@ -14,8 +14,8 @@ def presenca_online():
 
         business_info = search(cnpj = cnpj)
         print("Info 1:",business_info)
-        business_info = GoogleTransparency().analyse(business_info)
-        print("Info 2:",business_info)
+        # business_info = GoogleTransparency().analyse(business_info)
+        # print("Info 2:",business_info)
         business_info = GoogleBusiness().analyse(business_info)
         print("Info 3:",business_info)
 

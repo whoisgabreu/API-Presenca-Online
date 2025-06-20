@@ -129,34 +129,41 @@ class GoogleBusiness:
                         href = botao.query_selector("a").get_attribute("href")
                         new_url = f"https://google.com{href}"
 
-                page.goto(new_url, timeout=60000)
 
-                # -------- Analisar presença e notas --------
-                presenca = page.evaluate("""
-                    () => {
-                        return document.querySelector(".Aq14fc") ? true : false;
-                    }
-                """)
+                if new_url:
+                    page.goto(new_url, timeout=60000)
 
-                nota = page.evaluate("""
-                    () => {
-                        const el = document.querySelector(".Aq14fc");
-                        return el ? parseFloat(el.innerText.replace(",", ".")) : 0;
-                    }
-                """)
+                    # -------- Analisar presença e notas --------
+                    presenca = page.evaluate("""
+                        () => {
+                            return document.querySelector(".Aq14fc") ? true : false;
+                        }
+                    """)
 
-                qtd_avaliacoes = page.evaluate("""
-                    () => {
-                        const el = document.querySelector(".rjxHPb.PZPZlf span a span");
-                        return el ? el.innerText : "0";
-                    }
-                """)
+                    nota = page.evaluate("""
+                        () => {
+                            const el = document.querySelector(".Aq14fc");
+                            return el ? parseFloat(el.innerText.replace(",", ".")) : 0;
+                        }
+                    """)
 
-                # -------- Salvar no dicionário --------
-                business_info.setdefault("ads", {}).setdefault("google_business", {})
-                business_info["ads"]["google_business"]["presenca_online"] = presenca
-                business_info["ads"]["google_business"]["nota"] = nota
-                business_info["ads"]["google_business"]["qtd_avaliacao"] = int(qtd_avaliacoes.split(" ")[0])
+                    qtd_avaliacoes = page.evaluate("""
+                        () => {
+                            const el = document.querySelector(".rjxHPb.PZPZlf span a span");
+                            return el ? el.innerText : "0";
+                        }
+                    """)
+
+                    # -------- Salvar no dicionário --------
+                    business_info.setdefault("ads", {}).setdefault("google_business", {})
+                    business_info["ads"]["google_business"]["presenca_online"] = presenca
+                    business_info["ads"]["google_business"]["nota"] = nota
+                    business_info["ads"]["google_business"]["qtd_avaliacao"] = int(qtd_avaliacoes.split(" ")[0])
+                else:
+                    business_info.setdefault("ads", {}).setdefault("google_business", {})
+                    business_info["ads"]["google_business"]["presenca_online"] = False
+                    business_info["ads"]["google_business"]["nota"] = 0
+                    business_info["ads"]["google_business"]["qtd_avaliacao"] = 0
 
                 browser.close()
 

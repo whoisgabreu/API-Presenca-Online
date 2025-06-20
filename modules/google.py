@@ -10,6 +10,7 @@ from playwright.sync_api import sync_playwright
 import os
 from time import sleep
 import json
+import tempfile
 
 class GoogleTransparency():
 
@@ -40,6 +41,11 @@ class GoogleTransparency():
         # self.options.add_experimental_option("prefs",prefs)
         # user_data_dir = os.path.join(os.path.expanduser("~"), "AppData", "Local", "Google", "Chrome", "User Data", "Projetos Matriz")
         # self.options.add_argument(f"user-data-dir={user_data_dir}")
+        temp_dir = tempfile.mkdtemp()
+
+        # Adicionar o user-data-dir
+        self.options.add_argument(f"--user-data-dir={temp_dir}")
+
 
     def analyse(self, business_info) -> dict: 
         self.driver = webdriver.Chrome(options=self.options)

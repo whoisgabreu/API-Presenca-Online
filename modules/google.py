@@ -26,11 +26,11 @@ class GoogleTransparency():
         self.options.add_argument("--ignore-certificate-errors")
         # self.options.add_argument("--timeout=120")
         self.options.add_argument("--headless=new")
-        self.options.add_argument("--window-position=0,0")
-        self.options.add_argument("--window-size=800,600")
+        # self.options.add_argument("--window-position=0,0")
+        # self.options.add_argument("--window-size=800,600")
 
-        self.options.add_experimental_option("excludeSwitches", ["enable-automation"])
-        self.options.add_experimental_option("useAutomationExtension", False)
+        # self.options.add_experimental_option("excludeSwitches", ["enable-automation"])
+        # self.options.add_experimental_option("useAutomationExtension", False)
         # self.downloadDir = os.path.join(os.path.expanduser('~'),'Downloads')
         # prefs = {
         #         "profile.default_content_settings.popups": 0,

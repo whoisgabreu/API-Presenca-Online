@@ -30,14 +30,14 @@ class GoogleTransparency():
 
         self.options.add_experimental_option("excludeSwitches", ["enable-automation"])
         self.options.add_experimental_option("useAutomationExtension", False)
-        self.downloadDir = os.path.join(os.path.expanduser('~'),'Downloads')
-        prefs = {
-                "profile.default_content_settings.popups": 0,
-                "download.default_directory": self.downloadDir,
-                "download.prompt_for_download": False,
-                "download.directory_upgrade": True
-                }
-        self.options.add_experimental_option("prefs",prefs)
+        # self.downloadDir = os.path.join(os.path.expanduser('~'),'Downloads')
+        # prefs = {
+        #         "profile.default_content_settings.popups": 0,
+        #         "download.default_directory": self.downloadDir,
+        #         "download.prompt_for_download": False,
+        #         "download.directory_upgrade": True
+        #         }
+        # self.options.add_experimental_option("prefs",prefs)
         # user_data_dir = os.path.join(os.path.expanduser("~"), "AppData", "Local", "Google", "Chrome", "User Data", "Projetos Matriz")
         # self.options.add_argument(f"user-data-dir={user_data_dir}")
 

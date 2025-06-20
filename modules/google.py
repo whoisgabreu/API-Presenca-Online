@@ -182,7 +182,7 @@ class GoogleTransparency:
     def analyse(self, business_info) -> dict:
         with sync_playwright() as p:
             browser = p.chromium.launch(
-                headless=False,
+                headless=True,
                 args=[
                     "--disable-blink-features=AutomationControlled",
                     "--ignore-certificate-errors",
@@ -247,7 +247,7 @@ class GoogleBusiness:
 
             with sync_playwright() as p:
                 browser = p.chromium.launch(
-                    headless=False,
+                    headless=True,
                     args=[
                         "--disable-blink-features=AutomationControlled",
                         "--ignore-certificate-errors",
@@ -268,13 +268,14 @@ class GoogleBusiness:
                 page = context.new_page()
 
                 page.goto(url, timeout=60000)
-                sleep(5)
+                sleep(2)
 
                 botoes = page.query_selector_all(".bkaPDb")
                 print(botoes)
 
                 for botao in botoes:
                     span = botao.query_selector("span")
+                    print(span.inner_text())
                     if span.inner_text() == "Avaliar":
                         print(span.inner_text())
                         href = botao.query_selector("a").get_attribute("href")

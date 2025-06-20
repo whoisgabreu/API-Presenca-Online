@@ -13,12 +13,11 @@ def presenca_online():
         cnpj = request.args.get("cnpj")
 
         business_info = search(cnpj = cnpj)
-        print("Info 1:",business_info)
+        # print("Info 1:",business_info)
         business_info = GoogleTransparency().analyse(business_info)
-        print("Info 2:",business_info)
-        
-        business_info = GoogleBusiness().analyse(business_info)
-        print("Info 3:",business_info)
+        # print("Info 2:",business_info)
+        # business_info = GoogleBusiness().analyse(business_info)
+        # print("Info 3:",business_info)
 
 
         return jsonify(business_info)

@@ -233,7 +233,7 @@ class GoogleTransparency:
 
             return business_info
 
-class GoogleBusiness:
+class GoogleBusiness: # NÃO FUNCIONA NA VPS POR QUESTÕES DE CAPTCHA
 
     def __init__(self):
         self.userData = None

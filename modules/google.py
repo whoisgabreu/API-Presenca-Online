@@ -115,14 +115,12 @@ class GoogleBusiness:
                 )
 
                 page = context.new_page()
-                print(url)
+
                 page.goto(url, timeout=60000)
                 sleep(5)  # Se quiser, depois pode trocar por um wait_for_selector
-                print("Título da página:", page.title())
-                # page.wait_for_selector(".bkaPDb")
+
                 # -------- Buscar botões com a mesma classe .bkaPDb --------
                 botoes = page.query_selector_all(".bkaPDb")
-                print(page.content())
                 print(botoes)
                 for botao in botoes:
                     span = botao.query_selector("span")
@@ -130,7 +128,6 @@ class GoogleBusiness:
                         print(span.inner_text())
                         href = botao.query_selector("a").get_attribute("href")
                         new_url = f"https://google.com{href}"
-
 
                 page.goto(new_url, timeout=60000)
 

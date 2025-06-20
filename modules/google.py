@@ -92,7 +92,7 @@ class GoogleBusiness:
     def analyse(self, business_info) -> dict:
 
         if business_info["empresa"]["nome_fantasia"] != None:
-
+            print("entrou aqui")
             url = "https://www.google.com/search?q=" + business_info["empresa"]["nome_fantasia"]
 
             with sync_playwright() as p:
@@ -115,10 +115,10 @@ class GoogleBusiness:
                 )
 
                 page = context.new_page()
-
+                print(url)
                 page.goto(url, timeout=60000)
-                sleep(5)  # Se quiser, depois pode trocar por um wait_for_selector
-
+                # sleep(5)  # Se quiser, depois pode trocar por um wait_for_selector
+                page.wait_for_selector(".bkaPDb")
                 # -------- Buscar botões com a mesma classe .bkaPDb --------
                 botoes = page.query_selector_all(".bkaPDb")
                 print(botoes)
@@ -129,41 +129,35 @@ class GoogleBusiness:
                         href = botao.query_selector("a").get_attribute("href")
                         new_url = f"https://google.com{href}"
 
-                print(new_url)
-                if new_url:
-                    page.goto(new_url, timeout=60000)
 
-                    # -------- Analisar presença e notas --------
-                    presenca = page.evaluate("""
-                        () => {
-                            return document.querySelector(".Aq14fc") ? true : false;
-                        }
-                    """)
+                page.goto(new_url, timeout=60000)
 
-                    nota = page.evaluate("""
-                        () => {
-                            const el = document.querySelector(".Aq14fc");
-                            return el ? parseFloat(el.innerText.replace(",", ".")) : 0;
-                        }
-                    """)
+                # -------- Analisar presença e notas --------
+                presenca = page.evaluate("""
+                    () => {
+                        return document.querySelector(".Aq14fc") ? true : false;
+                    }
+                """)
 
-                    qtd_avaliacoes = page.evaluate("""
-                        () => {
-                            const el = document.querySelector(".rjxHPb.PZPZlf span a span");
-                            return el ? el.innerText : "0";
-                        }
-                    """)
+                nota = page.evaluate("""
+                    () => {
+                        const el = document.querySelector(".Aq14fc");
+                        return el ? parseFloat(el.innerText.replace(",", ".")) : 0;
+                    }
+                """)
 
-                    # -------- Salvar no dicionário --------
-                    business_info.setdefault("ads", {}).setdefault("google_business", {})
-                    business_info["ads"]["google_business"]["presenca_online"] = presenca
-                    business_info["ads"]["google_business"]["nota"] = nota
-                    business_info["ads"]["google_business"]["qtd_avaliacao"] = int(qtd_avaliacoes.split(" ")[0])
-                else:
-                    business_info.setdefault("ads", {}).setdefault("google_business", {})
-                    business_info["ads"]["google_business"]["presenca_online"] = False
-                    business_info["ads"]["google_business"]["nota"] = 0
-                    business_info["ads"]["google_business"]["qtd_avaliacao"] = 0
+                qtd_avaliacoes = page.evaluate("""
+                    () => {
+                        const el = document.querySelector(".rjxHPb.PZPZlf span a span");
+                        return el ? el.innerText : "0";
+                    }
+                """)
+
+                # -------- Salvar no dicionário --------
+                business_info.setdefault("ads", {}).setdefault("google_business", {})
+                business_info["ads"]["google_business"]["presenca_online"] = presenca
+                business_info["ads"]["google_business"]["nota"] = nota
+                business_info["ads"]["google_business"]["qtd_avaliacao"] = int(qtd_avaliacoes.split(" ")[0])
 
                 browser.close()
 

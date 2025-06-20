@@ -38,8 +38,8 @@ class GoogleTransparency():
                 "download.directory_upgrade": True
                 }
         self.options.add_experimental_option("prefs",prefs)
-        user_data_dir = os.path.join(os.path.expanduser("~"), "AppData", "Local", "Google", "Chrome", "User Data", "Projetos Matriz")
-        self.options.add_argument(f"user-data-dir={user_data_dir}")
+        # user_data_dir = os.path.join(os.path.expanduser("~"), "AppData", "Local", "Google", "Chrome", "User Data", "Projetos Matriz")
+        # self.options.add_argument(f"user-data-dir={user_data_dir}")
 
     def analyse(self, business_info) -> dict: 
         self.driver = webdriver.Chrome(options=self.options)
@@ -81,7 +81,7 @@ class GoogleBusiness:
     def __init__(self):
         self.userData = None
         self.authToken = None
-        self.downloadDir = os.path.join(os.path.expanduser('~'), 'Downloads')
+        # self.downloadDir = os.path.join(os.path.expanduser('~'), 'Downloads')
 
     def analyse(self, business_info) -> dict:
 

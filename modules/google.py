@@ -26,21 +26,21 @@ class GoogleTransparency():
         self.options.add_argument("--ignore-certificate-errors")
         # self.options.add_argument("--timeout=120")
         self.options.add_argument("--headless=new")
-        # self.options.add_argument("--window-position=0,0")
-        # self.options.add_argument("--window-size=800,600")
+        self.options.add_argument("--window-position=0,0")
+        self.options.add_argument("--window-size=800,600")
 
-        # self.options.add_experimental_option("excludeSwitches", ["enable-automation"])
-        # self.options.add_experimental_option("useAutomationExtension", False)
-        # self.downloadDir = os.path.join(os.path.expanduser('~'),'Downloads')
-        # prefs = {
-        #         "profile.default_content_settings.popups": 0,
-        #         "download.default_directory": self.downloadDir,
-        #         "download.prompt_for_download": False,
-        #         "download.directory_upgrade": True
-        #         }
-        # self.options.add_experimental_option("prefs",prefs)
-        # user_data_dir = os.path.join(os.path.expanduser("~"), "AppData", "Local", "Google", "Chrome", "User Data", "Projetos Matriz")
-        # self.options.add_argument(f"user-data-dir={user_data_dir}")
+        self.options.add_experimental_option("excludeSwitches", ["enable-automation"])
+        self.options.add_experimental_option("useAutomationExtension", False)
+        self.downloadDir = os.path.join(os.path.expanduser('~'),'Downloads')
+        prefs = {
+                "profile.default_content_settings.popups": 0,
+                "download.default_directory": self.downloadDir,
+                "download.prompt_for_download": False,
+                "download.directory_upgrade": True
+                }
+        self.options.add_experimental_option("prefs",prefs)
+        user_data_dir = os.path.join(os.path.expanduser("~"), "AppData", "Local", "Google", "Chrome", "User Data", "Projetos Matriz")
+        self.options.add_argument(f"user-data-dir={user_data_dir}")
         temp_dir = tempfile.mkdtemp()
 
         # Adicionar o user-data-dir

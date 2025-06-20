@@ -92,7 +92,7 @@ class GoogleBusiness:
     def analyse(self, business_info) -> dict:
 
         if business_info["empresa"]["nome_fantasia"] != None:
-            print("entrou aqui")
+
             url = "https://www.google.com/search?q=" + business_info["empresa"]["nome_fantasia"]
 
             with sync_playwright() as p:
@@ -129,7 +129,7 @@ class GoogleBusiness:
                         href = botao.query_selector("a").get_attribute("href")
                         new_url = f"https://google.com{href}"
 
-
+                print(new_url)
                 if new_url:
                     page.goto(new_url, timeout=60000)
 

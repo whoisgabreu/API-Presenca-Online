@@ -173,6 +173,11 @@
 from playwright.sync_api import sync_playwright
 from time import sleep
 
+from duckduckgo_search import DDGS
+from rapidfuzz import fuzz
+from time import sleep
+
+
 class GoogleTransparency:
 
     def __init__(self):

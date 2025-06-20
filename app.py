@@ -5,8 +5,22 @@ from modules.cnpja_api import search
 
 app = Flask(__name__)
 
+API_KEY = "BANANINHA123"
+
+def require_api_key(func):
+    def wrapper(*args, **kwargs):
+        key = request.headers.get("X-API-KEY")
+        if key != API_KEY:
+            return jsonify(
+                {"error": "Unauthorized"}
+            ), 401
+        return func(*args, **kwargs)
+    wrapper.__name__ = func.__name__
+    return wrapper
+
 
 @app.route("/analise/presenca-online", methods=["GET"])
+@require_api_key
 def presenca_online():
 
     try:

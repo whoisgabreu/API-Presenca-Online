@@ -272,7 +272,7 @@ class GoogleBusiness:
 
                 botoes = page.query_selector_all(".bkaPDb")
                 print(botoes)
-
+                print("html",page.content())
                 for botao in botoes:
                     span = botao.query_selector("span")
                     print(span.inner_text())

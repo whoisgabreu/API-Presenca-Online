@@ -182,7 +182,7 @@ class GoogleTransparency:
     def analyse(self, business_info) -> dict:
         with sync_playwright() as p:
             browser = p.chromium.launch(
-                headless=True,
+                headless=False,
                 args=[
                     "--disable-blink-features=AutomationControlled",
                     "--ignore-certificate-errors",
@@ -247,7 +247,7 @@ class GoogleBusiness:
 
             with sync_playwright() as p:
                 browser = p.chromium.launch(
-                    headless=True,
+                    headless=False,
                     args=[
                         "--disable-blink-features=AutomationControlled",
                         "--ignore-certificate-errors",

@@ -118,6 +118,7 @@ class GoogleBusiness:
                 print(url)
                 page.goto(url, timeout=60000)
                 # sleep(5)  # Se quiser, depois pode trocar por um wait_for_selector
+                print("Título da página:", page.title())
                 page.wait_for_selector(".bkaPDb")
                 # -------- Buscar botões com a mesma classe .bkaPDb --------
                 botoes = page.query_selector_all(".bkaPDb")

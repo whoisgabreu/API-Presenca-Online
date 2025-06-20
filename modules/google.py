@@ -170,87 +170,68 @@
 #         return business_info
 
 
-from selenium.webdriver.common.by import By
-from selenium.webdriver.common.keys import Keys
-from selenium.webdriver.common.action_chains import ActionChains
-from selenium.webdriver.support import expected_conditions as EC
-from selenium.webdriver.support.wait import WebDriverWait
-from selenium import webdriver
-from webdriver_manager.chrome import ChromeDriverManager
-from selenium.webdriver.chrome.service import Service
 from playwright.sync_api import sync_playwright
-import os
 from time import sleep
-import json
-import tempfile
 
-class GoogleTransparency():
+class GoogleTransparency:
 
     def __init__(self):
-
-        self.userData = None
-        self.authToken = None
-
         self.url = 'https://adstransparency.google.com/?hl=pt-BR&region=anywhere'
-
-        self.options = webdriver.ChromeOptions()
-        self.options.add_argument("--disable-blink-features=AutomationControlled")
-        self.options.add_argument("--ignore-certificate-errors")
-        self.options.add_argument("--headless=new")
-        self.options.add_argument("--window-position=0,0")
-        self.options.add_argument("--window-size=800,600")
-
-        # ✅ User-Agent Fake de Desktop (Chrome realístico)
-        self.options.add_argument('--user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/115.0.0.0 Safari/537.36')
-
-        self.options.add_experimental_option("excludeSwitches", ["enable-automation"])
-        self.options.add_experimental_option("useAutomationExtension", False)
-
-        self.downloadDir = os.path.join(os.path.expanduser('~'), 'Downloads')
-        prefs = {
-            "profile.default_content_settings.popups": 0,
-            "download.default_directory": self.downloadDir,
-            "download.prompt_for_download": False,
-            "download.directory_upgrade": True
-        }
-        self.options.add_experimental_option("prefs", prefs)
-
-        # ✅ User Data Dir
-        temp_dir = tempfile.mkdtemp()
-        self.options.add_argument(f"--user-data-dir={temp_dir}")
+        self.user_agent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/115.0.0.0 Safari/537.36"
 
     def analyse(self, business_info) -> dict:
-        self.driver = webdriver.Chrome(options=self.options)
-        self.driver.get(self.url)
+        with sync_playwright() as p:
+            browser = p.chromium.launch(
+                headless=True,
+                args=[
+                    "--disable-blink-features=AutomationControlled",
+                    "--ignore-certificate-errors",
+                    "--no-sandbox",
+                    "--disable-dev-shm-usage",
+                    "--window-position=0,0",
+                    "--window-size=800,600"
+                ]
+            )
 
-        self.driver.find_elements(By.CLASS_NAME, "input-area")[0].clear()
-        self.driver.find_elements(By.CLASS_NAME, "input-area")[0].send_keys(business_info["empresa"]["razao_social"])
+            context = browser.new_context(
+                viewport={"width": 800, "height": 600},
+                user_agent=self.user_agent,
+                ignore_https_errors=True
+            )
 
-        sleep(1)
+            page = context.new_page()
+            page.goto(self.url, timeout=60000)
 
-        pres_online = self.driver.execute_script("""
-        if (document.querySelector(".ads-count-legacy")) {
-            return true;
-        } else {
-            return false;
-        }
-        """)
+            # Preenche o campo de busca
+            input_area = page.query_selector(".input-area")
+            if input_area:
+                input_area.fill(business_info["empresa"]["razao_social"])
+            else:
+                print("Input area não encontrado.")
 
-        quant_ads = self.driver.execute_script("""
-        if (document.querySelector(".ads-count-legacy")) {
-            return document.querySelector(".ads-count-legacy").textContent;
-        } else {
-            return "0";
-        }
-        """).replace("~", "").split(" ")
+            sleep(1)  # Se quiser, depois pode trocar por wait_for_selector
 
-        self.driver.quit()
+            # Verificar presença do seletor de quantidade de anúncios
+            pres_online = page.evaluate("""
+                () => {
+                    return document.querySelector(".ads-count-legacy") ? true : false;
+                }
+            """)
 
-        business_info.setdefault("ads", {}).setdefault("google_transparency", {})
-        business_info["ads"]["google_transparency"]["presenca_online"] = pres_online
-        business_info["ads"]["google_transparency"]["qtd_anuncio"] = int(quant_ads[0])
+            quant_ads = page.evaluate("""
+                () => {
+                    const el = document.querySelector(".ads-count-legacy");
+                    return el ? el.textContent.replace("~", "").split(" ")[0] : "0";
+                }
+            """)
 
-        return business_info
+            browser.close()
+
+            business_info.setdefault("ads", {}).setdefault("google_transparency", {})
+            business_info["ads"]["google_transparency"]["presenca_online"] = pres_online
+            business_info["ads"]["google_transparency"]["qtd_anuncio"] = int(quant_ads)
+
+            return business_info
 
 class GoogleBusiness:
 
